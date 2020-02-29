@@ -1,0 +1,27 @@
+{
+  "name": "svnrealestate",
+  "version": "1.0.0",
+  "description": "SVN Real Estate using NodeJS, ExpressJS, EJS, RDBMS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "svnrealestate"
+  },
+  "keywords": [
+    "Node",
+    "Express",
+    "Real",
+    "Estate",
+    "RealEstate",
+    "EJS"
+  ],
+  "author": "sujithvn",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.0.1",
+    "express": "^4.17.1"
+  }
+}

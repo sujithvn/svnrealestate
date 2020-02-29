@@ -1,0 +1,27 @@
+### Node ###
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# dotenv environment variables file
+.env
+.env.test
+
+# rollup.js default build output
+dist/
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Credits: https://www.gitignore.io/api/node,visualstudiocode
