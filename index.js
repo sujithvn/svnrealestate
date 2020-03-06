@@ -2,8 +2,11 @@ const express = require('express');
 require('dotenv').config();
 
 const app = express();
+
+app.set('views', 'views');
+app.set('view engine', 'ejs');
 app.use('/', (req, res) => {
-    res.send('<h1>Hello from Sujith</h1>')
+    res.render('index')
 
 })
 const PORT = process.env.APP_PORT || 8000;
