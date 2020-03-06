@@ -3,12 +3,16 @@ require('dotenv').config();
 
 const app = express();
 
+const homeRoutes = require('./routes/home');
+
 app.set('views', 'views');
 app.set('view engine', 'ejs');
-app.use('/', (req, res) => {
-    res.render('index')
 
-})
+// Routes
+app.use('/home', homeRoutes);
+app.use('/', homeRoutes);
+
+
 const PORT = process.env.APP_PORT || 8000;
 
 app.listen(PORT, () => {
