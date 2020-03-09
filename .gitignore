@@ -17,6 +17,9 @@ node_modules/
 # rollup.js default build output
 dist/
 
+# JEST files
+coverage/
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
