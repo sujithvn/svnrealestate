@@ -26,14 +26,13 @@
   <section id="listings" class="py-4">
     <div class="container">
       <div class="row">
-
-        <%- include('includes/_listing_single.ejs') %>
-        <%- include('includes/_listing_single.ejs') %>
-        <%- include('includes/_listing_single.ejs') %>
-        <%- include('includes/_listing_single.ejs') %>
-        <%- include('includes/_listing_single.ejs') %>
-        <%- include('includes/_listing_single.ejs') %>
-
+        <% if (listings && listings.length > 0) { %>
+          <% for(let listing of listings) { %> 
+            <%- include('includes/_listing_single.ejs', {listing: listing}) %>
+          <% } %> 
+        <% } else { %>
+          <h1>No listings found...</h1>
+        <% } %>  
       </div>
 
       <%- include('includes/_pagination.ejs') %>

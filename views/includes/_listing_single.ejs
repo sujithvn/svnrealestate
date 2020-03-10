@@ -1,42 +1,43 @@
   <!-- Single Listing -->
   <div class="col-md-6 col-lg-4 mb-4">
     <div class="card listing-preview">
-      <img class="card-img-top" src="img/homes/home-3.jpg" alt="">
+      <img class="card-img-top" src="/img/homes/home-3.jpg" alt="">
       <div class="card-img-overlay">
         <h2>
-          <span class="badge badge-secondary text-white">$580,000</span>
+          <span class="badge badge-secondary text-white">$<%= listing.price %> </span>
         </h2>
       </div>
       <div class="card-body">
         <div class="listing-heading text-center">
-          <h4 class="text-primary">187 Woodrow Street</h4>
+          <h4 class="text-primary"><%= listing.title %></h4>
+          <h6 class="text-primary"><%= listing.address %></h6>
           <p>
-            <i class="fas fa-map-marker text-secondary"></i> Salem MA, 01915</p>
+            <i class="fas fa-map-marker text-secondary"></i> <%= listing.city %>, <%= listing.state %> <%= listing.zipcode %></p>
         </div>
         <hr>
         <div class="row py-2 text-secondary">
           <div class="col-6">
-            <i class="fas fa-th-large"></i> Sqft: 3107</div>
+            <i class="fas fa-th-large"></i> Sqft: <%= listing.sqft %></div>
           <div class="col-6">
-            <i class="fas fa-car"></i> Garage: 0</div>
+            <i class="fas fa-car"></i> Garage: <%= listing.garage %></div>
         </div>
         <div class="row py-2 text-secondary">
           <div class="col-6">
-            <i class="fas fa-bed"></i> Bedrooms: 4</div>
+            <i class="fas fa-bed"></i> Beds: <%= listing.bedrooms %></div>
           <div class="col-6">
-            <i class="fas fa-bath"></i> Bathrooms: 3</div>
+            <i class="fas fa-bath"></i> Baths: <%= listing.bathrooms %></div>
         </div>
         <hr>
         <div class="row py-2 text-secondary">
           <div class="col-6">
-            <i class="fas fa-user"></i> Mark Hudson</div>
+            <i class="fas fa-user"></i> <%= listing.userId %></div>
         <!-- </div>
         <div class="row text-secondary pb-2"> -->
           <div class="col-6">
-            <i class="fas fa-clock"></i> 5 days ago</div>
+            <i class="fas fa-clock"></i> <%= listing.list_date %></div>
         </div>
         <hr>
-        <a href="/list/listing_detail" class="btn btn-primary btn-block">More Info</a>
+        <a href="/list/listing_detail?lid=<%= listing.id %>" class="btn btn-primary btn-block">More Info</a>
       </div>
     </div>
   </div>
