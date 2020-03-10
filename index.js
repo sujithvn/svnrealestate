@@ -6,6 +6,7 @@ const app = express();
 
 const homeRoutes = require('./routes/home');
 const authRoutes = require("./routes/auth");
+const listRoutes = require("./routes/list");
 
 app.set('views', 'views');
 app.set('view engine', 'ejs');
@@ -14,6 +15,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/list", listRoutes);
 app.use('/home', homeRoutes);
 app.use('/', homeRoutes);
 
