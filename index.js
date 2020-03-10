@@ -5,6 +5,7 @@ require('dotenv').config();
 const app = express();
 
 const homeRoutes = require('./routes/home');
+const pageRoutes = require('./routes/page');
 const authRoutes = require("./routes/auth");
 const listRoutes = require("./routes/list");
 
@@ -15,6 +16,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/page", pageRoutes);
 app.use("/list", listRoutes);
 app.use('/home', homeRoutes);
 app.use('/', homeRoutes);
