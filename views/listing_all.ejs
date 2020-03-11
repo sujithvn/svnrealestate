@@ -5,7 +5,10 @@
   <!-- Navbar -->
   <%- include('includes/_navbar.ejs') %>
 
-  <%- include('includes/_showcase_inner.ejs') %>
+   <% const showcase_inner = {} %>
+   <% showcase_inner.title = "Browse Our Properties" %>
+   <% showcase_inner.detail = "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt, pariatur!" %>
+   <%- include('includes/_showcase_inner.ejs', {showcase_inner: showcase_inner}) %>
 
   <!-- Breadcrumb -->
   <section id="bc" class="mt-3">

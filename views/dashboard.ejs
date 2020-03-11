@@ -6,7 +6,10 @@
   <!-- Navbar -->
   <%- include('includes/_navbar.ejs') %>
 
-  <%- include('includes/_showcase_inner.ejs') %>
+  <% const showcase_inner = {} %>
+  <% showcase_inner.title = "Buyer Dashboard" %>
+  <% showcase_inner.detail = "Manage your sVn Real Estate account" %>
+  <%- include('includes/_showcase_inner.ejs', {showcase_inner: showcase_inner}) %>
 
 
   <!-- Breadcrumb -->
