@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const csrf = require('csurf');
 const bodyParser = require('body-parser');
+const flash = require('connect-flash');
 const path = require('path');
 require('dotenv').config();
 
@@ -34,6 +35,7 @@ app.use(
   })
 );
 app.use(csrfProtection);
+app.use(flash());
 
 app.use((req, res, next) => { 
   res.locals.isAuth = req.session.isLoggedIn;

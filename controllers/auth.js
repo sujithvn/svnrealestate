@@ -3,9 +3,20 @@ const bcrypt = require('bcryptjs');
 
 const { User } = require('../models/model');
 
+const processMessage = inMessage => {
+  let outMessage = {};
+  if (inMessage.length > 0) {
+    outMessage.type = inMessage[0];
+    outMessage.msg = inMessage[1];
+  } else {
+    outMessage = null;
+  }
+  return outMessage;
+};
 
 exports.getLogin = (req, res, next) => {
-  res.render(path.join(__dirname, "..", "views", "login"));
+  const msg = processMessage(req.flash("msg"));
+  res.render(path.join(__dirname, "..", "views", "login"), {errMessage: msg});
 };
 
 exports.postLogin = (req, res, next) => {
@@ -15,8 +26,11 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ where: { userEmail: userEmail } })
     .then(userDB => {
       if (!userDB) {
-        console.log(`Useremail does not exist`);
-        return res.redirect('/auth/login');
+        req.flash('msg', ['danger','UserEmail or Password incorrect']);
+        return req.session.save(err => {
+          console.log(err);
+          res.redirect("/auth/login");
+        });
       }
       bcrypt
         .compare(password, userDB.userPass)
@@ -30,8 +44,11 @@ exports.postLogin = (req, res, next) => {
               res.redirect("/");
             });
           } else {
-            console.log(`Password does not match`);
-            return res.redirect("/auth/login");
+            req.flash("msg", ["danger", "UserEmail or Password incorrect"]);
+            return req.session.save(err => {
+              console.log(err);
+              res.redirect("/auth/login");
+            });
           }
         })
         .catch(err => console.log(err));
@@ -47,8 +64,10 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.getRegister = (req, res, next) => {
-
-  res.render(path.join(__dirname, "..", "views", "register"));
+  const msg = processMessage(req.flash("msg"));
+  res.render(path.join(__dirname, "..", "views", "register"), {
+    errMessage: msg
+  });
 };
 
 exports.postRegister = (req, res, next) => {
@@ -64,8 +83,11 @@ exports.postRegister = (req, res, next) => {
   User.findOne({where: { userEmail: userEmail }})
   .then(userDB => {
     if (userDB){
-      console.log(`User with email = ${userEmail} already exist!!!`);
-      return res.redirect('/auth/register');
+      req.flash("msg", ["danger", "Email provided is already in use"]);
+      return req.session.save(err => {
+        console.log(err);
+        res.redirect("/auth/register");
+      });
     } else {
       // No user exist with that name, processing registration...
       return bcrypt.hash(password,12)
@@ -80,8 +102,12 @@ exports.postRegister = (req, res, next) => {
         });
         return user.save();
       })
-      .then(result => {
-        return res.redirect('/auth/login');
+        .then(result => {
+          req.flash("msg", ["success", "User registered, please login with email & password"]);
+          return req.session.save(err => {
+            console.log(err);
+            res.redirect("/auth/login");
+          });
       })
     }
   })
