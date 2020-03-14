@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const csrf = require('csurf');
 const bodyParser = require('body-parser');
 const path = require('path');
 require('dotenv').config();
@@ -16,6 +17,7 @@ const sequelize = require('./util/database');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
+const csrfProtection = new csrf();
 const myStore = new SequelizeStore({ db: sequelize });
 const SECRET = process.env.SES_SECRET;
 
@@ -31,6 +33,13 @@ app.use(
     saveUninitialized: false // not saved in every req, but only if something changes
   })
 );
+app.use(csrfProtection);
+
+app.use((req, res, next) => { 
+  res.locals.isAuth = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 
 // Routes
 app.use('/auth', authRoutes);

@@ -1,14 +1,15 @@
 const express = require("express");
 
 const listController = require("../controllers/list");
+const is_auth = require("../middlewares/is_auth");
 
 const router = express.Router();
 
 router.get("/listing_all", listController.getListingAll);
 router.get("/listing_detail", listController.getListingDetail);
-router.get("/listing_edit", listController.getListingEdit);
-router.post("/listing_edit", listController.postListingEdit);
-router.get("/seller_manage", listController.getSellerManage);
+router.get("/listing_edit", is_auth, listController.getListingEdit);
+router.post("/listing_edit", is_auth, listController.postListingEdit);
+router.get("/seller_manage", is_auth, listController.getSellerManage);
 router.post("/search", listController.postSearch);
 
 module.exports = router;

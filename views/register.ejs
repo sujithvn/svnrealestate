@@ -17,6 +17,7 @@
             </div>
             <div class="card-body">
               <form action="/auth/register", method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="form-group">
                   <label for="firstname">First Name</label>
                   <input type="text" name="firstname" class="form-control" required>

@@ -18,19 +18,32 @@
                 <li class="nav-item mr-3">
                     <a class="nav-link" href="/list/listing_all">Featured Listings</a>
                 </li>
-                <li class="nav-item mr-3">
-                    <a class="nav-link" href="/list/seller_manage">Manage Listing</a>
-                </li>
+                <% if (isAuth) { %> 
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="/list/seller_manage">Manage Listing</a>
+                    </li>
+                <% } %> 
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item mr-3">
-                    <a class="nav-link" href="/auth/register">
-                    <i class="fas fa-user-plus"></i> Register</a>
-                </li>
-                <li class="nav-item mr-3">
-                    <a class="nav-link" href="/auth/login">
-                    <i class="fas fa-sign-in-alt"></i> Login</a>
-                </li>
+                <% if (!isAuth) { %>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="/auth/register">
+                        <i class="fas fa-user-plus"></i> Register</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="/auth/login">
+                        <i class="fas fa-sign-in-alt"></i> Login</a>
+                    </li>
+                <% } else { %> 
+                    <li class="nav-item mr-3">
+                        <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        <form action="/auth/logout" method="POST" id='logout'>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <input type="hidden">
+                        </form>
+                    </li>
+                <% } %> 
             </ul>
         </div>
     </div>
