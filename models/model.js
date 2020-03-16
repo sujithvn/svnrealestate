@@ -31,7 +31,9 @@ const User = sequelize.define("user", {
   userType: {
     type: Sequelize.INTEGER, // 1-Buyer, 2-Seller, 3-Admin
     allowNull: false
-  }
+  },
+  resetToken: Sequelize.STRING,
+  resetExpiry: Sequelize.DATE
 });
 
 const Listing = sequelize.define("listing", {
