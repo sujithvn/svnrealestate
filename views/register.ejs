@@ -16,40 +16,53 @@
                 <i class="fas fa-user-plus"></i> Register</h4>
             </div>
             <div class="card-body">
-              <% if (errMessage) { %>
-              <%- include('includes/_alerts.ejs', {errMessage: errMessage}) %>
+              <% if (userrMessages && userrMessages.length > 0) { %>
+                <%- include('includes/_alerts.ejs', {userrMessages: userrMessages, alertType: alertType}) %>
               <% } %>
               <form action="/auth/register", method="POST">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="form-group">
                   <label for="firstname">First Name</label>
-                  <input type="text" name="firstname" class="form-control" required>
+                  <input type="text" name="firstname"
+                  class="form-control 
+                      <%= userrMessages.find(e => e.param === 'firstname')? "invalid" : "" %> "
+                  value="<%= oldIn.firstname %>" required>
                 </div>
                 <div class="form-group">
                   <label for="lastname">Last Name</label>
-                  <input type="text" name="lastname" class="form-control" required>
+                  <input type="text" name="lastname"
+                  class="form-control <%= userrMessages.find(e => e.param === 'lastname')? "invalid" : "" %> "
+                  value="<%= oldIn.lastname %>" required>
                 </div>
                 <div class="form-group">
                   <label for="email">Email</label>
-                  <input type="email" name="email" class="form-control" required>
+                  <input type="email" name="email" 
+                  class="form-control <%= userrMessages.find(e => e.param === 'email')? "invalid" : "" %> "
+                  value="<%= oldIn.email %>" required>
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" name="password" class="form-control" required>
+                  <input type="password" name="password"
+                  class="form-control <%= userrMessages.find(e => e.param === 'password')? "invalid" : "" %> " required>
                 </div>
                 <div class="form-group">
                   <label for="password2">Confirm Password</label>
-                  <input type="password" name="password2" class="form-control" required>
+                  <input type="password" name="password2"
+                  class="form-control <%= userrMessages.find(e => e.param === 'password2')? "invalid" : "" %> " required>
                 </div>
                 <div class="form-group">
                   <label for="mobile">Mobile Number</label>
-                  <input type="phone" name="mobile" class="form-control" required>
+                  <input type="phone" name="mobile"
+                  class="form-control <%= userrMessages.find(e => e.param === 'mobile')? "invalid" : "" %> "
+                  value="<%= oldIn.mobile %>" required>
                 </div>
                 <div class="form-group">
                   <label for="userBuyer">Buyer</label>
-                  <input type="radio" name="userType" id="userBuyer" value="1">
+                  <input type="radio" name="userType" id="userBuyer" value="1" 
+                    <%= oldIn.userType === "1" ? "checked" : "" %> >
                   <label for="userSeller">Seller</label>
-                  <input type="radio" name="userType" id="uesrSeller" value="2">
+                  <input type="radio" name="userType" id="userSeller" value="2"
+                    <%= oldIn.userType === "2" ? "checked" : "" %>>
                 </div>
                 <input type="submit" value="Register" class="btn btn-secondary btn-block">
               </form>

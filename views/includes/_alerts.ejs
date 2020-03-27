@@ -1,8 +1,10 @@
 <div id="message" class="container">
-    <div class="alert alert-<%= errMessage.type %> alert-dismissible text-center" role="alert">
-        <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <%= errMessage.msg %>
-    </div>
+    <% for(let err of userrMessages) { %>
+        <div class="alert alert-<%= alertType %> alert-dismissible text-center" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <%= err.msg %>
+        </div>
+    <% } %> 
 </div>
