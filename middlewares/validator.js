@@ -7,7 +7,8 @@ const validateRulesLogin = () => {
   return [
     body("useremail")
       .isEmail()
-      .withMessage("Invalid or empty eMail"),
+      .withMessage("Invalid or empty eMail")
+      .normalizeEmail(),
     body("password")
       // .not()
       // .isEmpty()
@@ -52,16 +53,19 @@ const validateLogin = (req, res, next) => {
 const validateRulesRegister = () => {
   return [
     body("firstname")
+      .trim()
       .not()
       .isEmpty()
       .withMessage("First Name is required"),
     body("lastname")
+      .trim()
       .not()
       .isEmpty()
       .withMessage("Last Name is required"),
     body("email")
       .isEmail()
       .withMessage("Invalid eMail")
+      .normalizeEmail()
       .custom((value, { req }) => {
         return User.findOne({ where: { userEmail: value } })
           .then(userDB => {
@@ -71,6 +75,7 @@ const validateRulesRegister = () => {
           });
       }),
     body("password", "Password should be 6+ chars")
+      .trim()
       .isLength({ min: 6 }),
     body("password2").custom((value, { req }) => {
       if (value !== req.body.password) {
@@ -121,8 +126,10 @@ const validateRegister = (req, res, next) => {
 const validateRulesPassReset = () => {
   return [
     body("useremail")
+      .trim()
       .isEmail()
       .withMessage("Invalid or empty eMail")
+      .normalizeEmail()
   ];
 };
 
@@ -147,8 +154,10 @@ const validatePassReset = (req, res, next) => {
 const validateRulesPassNew = () => {
   return [
     body("password")
+      .trim()
       .isLength({ min: 6 })
       .withMessage("Password should be 6+ chars")
+      .trim()
   ];
 };
 
