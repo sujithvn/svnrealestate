@@ -10,7 +10,7 @@ exports.getListingAll = (req, res, next) => {
         listings: listings
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => next(new Error(err)));
 };
 
 exports.getListingDetail = (req, res, next) => {
@@ -19,7 +19,7 @@ exports.getListingDetail = (req, res, next) => {
   .then(listing => {
     res.render(path.join(__dirname, "..", "views", "listing_detail"), {listing: listing[0]});
   })
-  .catch(err => console.log(err));
+  .catch(err => next(new Error(err)));
 };
 
 exports.getSellerManage = (req, res, next) => {
@@ -27,7 +27,7 @@ exports.getSellerManage = (req, res, next) => {
     .then(listings => {
       res.render(path.join(__dirname, "..", "views", "listing_seller_manage"), { listings: listings });
     })
-    .catch(err => console.log(err));
+    .catch(err => next(new Error(err)));
 };
 
 exports.getListingEdit = (req, res, next) => {
@@ -37,7 +37,7 @@ exports.getListingEdit = (req, res, next) => {
     .then(listing => {
       res.render(path.join(__dirname, "..", "views", "listing_edit"), { listing: listing[0]});
     })
-    .catch(err => console.log(err));
+    .catch(err => next(new Error(err)));
 };
 
 
@@ -78,7 +78,7 @@ exports.postListingEdit = (req, res, next) => {
     return listNew.save()
       .then(result => {
         return res.redirect('/list/seller_manage')
-      }).catch(err => console.log(err));
+      }).catch(err => next(new Error(err)));
   } else {
     Listing.findByPk(req.body.list_idd)
       .then(listOld => {
@@ -103,7 +103,7 @@ exports.postListingEdit = (req, res, next) => {
       .then(result => {
         return res.redirect('/list/seller_manage');
       })
-      .catch(err => console.log(err));
+      .catch(err => next(new Error(err)));
   }         
 };
 

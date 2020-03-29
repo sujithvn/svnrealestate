@@ -6,5 +6,5 @@ exports.home = (req, res, next) => {
     .then(listings => {
         res.render('index', {listings: listings});
     })
-    .catch(err => console.log(err));
+    .catch(err => next(new Error(err)));
 };

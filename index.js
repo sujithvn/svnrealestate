@@ -12,6 +12,7 @@ const pageRoutes = require('./routes/page');
 const authRoutes = require('./routes/auth');
 const listRoutes = require('./routes/list');
 const sequelize = require('./util/database');
+const errorController = require("./controllers/errors");
 
 
 // initalize sequelize with session store
@@ -50,6 +51,12 @@ app.use('/list', listRoutes);
 app.use('/home', homeRoutes);
 app.use('/', homeRoutes);
 
+app.use('/500', errorController.get500);
+app.use(errorController.get404);
+
+app.use((error, req, res, next) => {
+  res.redirect('/500');
+});
 
 const PORT = process.env.APP_PORT || 8000;
 

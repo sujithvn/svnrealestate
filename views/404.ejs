@@ -1,0 +1,43 @@
+<%# layout('layout') -%>
+<%- include('includes/_head.ejs') %>
+
+<body>
+
+  <!-- Navbar -->
+  <%- include('includes/_navbar.ejs') %>
+
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> Page not found</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section id="about" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Looks like the page you're looking for does not exist...!</h4>
+          <p class="lead">... meanwhile, you could check our our listings!</p>
+          <img src="img/about.jpg" alt="">
+          <a href="/list/listing_all" class="btn btn-secondary text-white btn-lg">Our Listings</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+    <!-- Bottombar -->
+    <%- include('includes/_bottombar.ejs') %>
+
+  <!-- Footer -->
+  <%- include('includes/_footer.ejs') %>

@@ -106,7 +106,7 @@ exports.postRegister = (req, res, next) => {
             });
           });
       })
-  .catch(err => console.log(err));
+  .catch(err => next(new Error(err)));
   //res.render(path.join(__dirname, "..", "views", "register"));
 };
 
@@ -154,7 +154,7 @@ exports.postPasswordReset = (req, res, next) => {
             });
           });
       })
-      .catch(err => { console.log(err); });
+      .catch(err => next(new Error(err)));
   });
 };
 
@@ -188,9 +188,7 @@ exports.getPasswordNew = (req, res, next) => {
         passwordToken: token
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => next(new Error(err)));
 };
 
 
@@ -239,5 +237,5 @@ exports.postPasswordNew = (req, res, next) => {
           });
         });
     })
-    .catch(err => console.log(err));
+    .catch(err => next(new Error(err)));
 };
