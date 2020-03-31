@@ -15,36 +15,39 @@
                 <i class="fas fa-upload"></i> Add / Edit Listing</h4>
             </div>
             <div class="card-body">
+              <% if (userrMessages && userrMessages.length > 0) { %>
+                <%- include('includes/_alerts.ejs', {userrMessages: userrMessages, alertType: alertType}) %>
+              <% } %>
               <form action="/list/listing_edit" , method="POST">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <!-- Row 1 -->
                 <div class="form-group row">
                   <div class="col-4">
                     <label for="title">Title</label>
-                    <input type="text" name="title" class="form-control" required 
-                    value= <%= listing ? listing.title:"" %>  >
+                    <input type="text" name="title" class="form-control <%= userrMessages.find(e => e.param === 'title')? "invalid" : "" %>" required 
+                    value="<%= listing ? listing.title:"" %>">
                   </div>
                   <div class="col-3">
                     <label for="city">City</label>
-                    <input type="text" name="city" class="form-control" required
-                      value=<%= listing ? listing.city:"" %>>
+                    <input type="text" name="city" class="form-control <%= userrMessages.find(e => e.param === 'city')? "invalid" : "" %>" required
+                      value="<%= listing ? listing.city:"" %>">
                   </div>
                   <div class="col-2">
                     <label for="state">State</label>
-                    <input type="text" name="state" class="form-control" required
-                      value=<%= listing ? listing.state:"" %>>
+                    <input type="text" name="state" class="form-control <%= userrMessages.find(e => e.param === 'state')? "invalid" : "" %>" required
+                      value="<%= listing ? listing.state:"" %>">
                   </div>
                   <div class="col-3">
                     <label for="zipcode">Zipcode</label>
-                    <input type="text" name="zipcode" class="form-control" required
-                      value=<%= listing ? listing.zipcode:"" %>>
+                    <input type="text" name="zipcode" class="form-control <%= userrMessages.find(e => e.param === 'zipcode')? "invalid" : "" %>" required
+                      value="<%= listing ? listing.zipcode:"" %>">
                   </div>
                 </div>
                 <!-- Row 2 -->
                 <div class="form-group row">
                   <div class="col-12">
                     <label for="address">Address</label>
-                    <input type="text" name="address" class="form-control" required
+                    <input type="text" name="address" class="form-control <%= userrMessages.find(e => e.param === 'address')? "invalid" : "" %>" required
                       value="<%= listing ? listing.address:"" %>">
                   </div>
                 </div>
@@ -52,40 +55,42 @@
                 <div class="form-group row">
                   <div class="col-12">
                     <label for="description">Description</label>
-                    <textarea name="description" id="description" class="form-control" rows="3"><%= listing ? listing.description : "" %></textarea>
+                    <textarea name="description" id="description" class="form-control <%= userrMessages.find(e => e.param === 'description')? "invalid" : "" %></textarea>" 
+                    rows="3"><%= listing ? listing.description : "" %>
+                    </textarea>
                   </div>
                 </div>
                 <!-- Row 4 -->
                 <div class="form-group row">
                   <div class="col-2">
                     <label for="price">Price in $</label>
-                    <input type="number" name="price" class="form-control" required
-                      value=<%= listing ? listing.price:"" %>>
+                    <input type="number" name="price" class="form-control <%= userrMessages.find(e => e.param === 'price')? "invalid" : "" %>" required
+                      value="<%= listing ? listing.price:"" %>">
                   </div>
                   <div class="col-2">
                     <label for="bedrooms">Bedrooms [0 to 10]</label>
-                    <input type="number" name="bedrooms" class="form-control" min=0 max=10 required
-                      value=<%= listing ? listing.bedrooms:"" %>>
+                    <input type="number" name="bedrooms" class="form-control <%= userrMessages.find(e => e.param === 'bedrooms')? "invalid" : "" %>" min=0 max=10 required
+                      value="<%= listing ? listing.bedrooms:"" %>">
                   </div>
                   <div class="col-2">
                     <label for="bathrooms">Bathrooms [0 to 10]</label>
-                    <input type="number" name="bathrooms" class="form-control" min=0 max=10 required
-                      value=<%= listing ? listing.bathrooms:"" %>>
+                    <input type="number" name="bathrooms" class="form-control <%= userrMessages.find(e => e.param === 'bathrooms')? "invalid" : "" %>" min=0 max=10 required
+                      value="<%= listing ? listing.bathrooms:"" %>">
                   </div>
                   <div class="col-2">
                     <label for="garage">Garage [0 to 5]</label>
-                    <input type="number" name="garage" class="form-control" min=0 max=5 required
-                      value=<%= listing ? listing.garage:"" %>>
+                    <input type="number" name="garage" class="form-control <%= userrMessages.find(e => e.param === 'garage')? "invalid" : "" %>" min=0 max=5 required
+                      value="<%= listing ? listing.garage:"" %>">
                   </div>
                   <div class="col-2">
                     <label for="sqft">Sq. Ft.</label>
-                    <input type="number" name="sqft" class="form-control" required
-                      value=<%= listing ? listing.sqft:"" %>>
+                    <input type="number" name="sqft" class="form-control <%= userrMessages.find(e => e.param === 'sqft')? "invalid" : "" %>" required
+                      value="<%= listing ? listing.sqft:"" %>">
                   </div>
                   <div class="col-2">
                     <label for="lotsize">Lotsize in Acres</label>
-                    <input type="number" name="lotsize" class="form-control" step=0.1 required
-                      value=<%= listing ? listing.lot_size:"" %>>
+                    <input type="number" name="lotsize" class="form-control <%= userrMessages.find(e => e.param === 'lotsize')? "invalid" : "" %>" step=0.1 required
+                      value="<%= listing ? listing.lot_size:"" %>">
                   </div>
                 </div>
                 <!-- Row 5 -->
@@ -96,12 +101,12 @@
                       <%= listing ? (listing.is_published === true ? "checked": ""):"" %> value=1>
                   </div>
                   <div class="col-6">
-                    <label for="listdate">Created/Updated Date</label>
-                    <input type="date" name="list_date" class="form-control" disabled
-                      value="<%= listing ? listing.list_date.toISOString().substring(0, 10):"" %>">
+                    <label for="list_date">Created/Updated Date</label>
+                    <input type="date" name="list_date" id="list_date" class="form-control" disabled
+                      value="<%= new Date().toISOString().substring(0, 10) %>">
                   </div>
                 </div>
-                <input type="hidden" name="list_idd" value="<%= listing ? listing.id:"" %>">
+                <input type="hidden" name="id" value="<%= listing ? listing.id:"" %>">
                 <!--  TODO Add Main photo  -->
                 <!--  TODO Add multiple sub-photos -->
                 <input type="submit" value="Upload" class="btn btn-secondary btn-block">

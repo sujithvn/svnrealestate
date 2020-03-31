@@ -2,6 +2,7 @@ const path = require("path");
 
 
 const { Listing } = require('../models/model');
+const { processMessage } = require('../util/misce');
 
 exports.getListingAll = (req, res, next) => {
   Listing.findAll({where: {is_published: 1}})
@@ -31,11 +32,17 @@ exports.getSellerManage = (req, res, next) => {
 };
 
 exports.getListingEdit = (req, res, next) => {
-  const list_id = req.query.listId || 0;
+  const inMsg = req.flash("msg");
+  const [msgs, alertType] = processMessage(inMsg);
+  const id = req.query.id || 0;
 
-  Listing.findAll({ where: { id: list_id, userId: req.session.user.id} })
+  Listing.findAll({ where: { id: id, userId: req.session.user.id} })
     .then(listing => {
-      res.render(path.join(__dirname, "..", "views", "listing_edit"), { listing: listing[0]});
+      res.render(path.join(__dirname, "..", "views", "listing_edit"), { 
+        listing: listing[0],
+        userrMessages: msgs || [],
+        alertType: alertType
+      });
     })
     .catch(err => next(new Error(err)));
 };
@@ -57,7 +64,7 @@ exports.postListingEdit = (req, res, next) => {
   const n_list_date = new Date().toISOString(); // list_date will be current date
   const n_is_published = req.body.ispublished || 0;
 
-  if (!req.body.list_idd) {
+  if (!req.body.id) {
     const listNew = new Listing({
       title: n_title,
       city: n_city,
@@ -80,7 +87,8 @@ exports.postListingEdit = (req, res, next) => {
         return res.redirect('/list/seller_manage')
       }).catch(err => next(new Error(err)));
   } else {
-    Listing.findByPk(req.body.list_idd)
+    // Listing.findByPk(req.body.id)
+    Listing.findOne({ where: { id: req.body.id, userId: req.session.user.id} })
       .then(listOld => {
         listOld.title = n_title;
         listOld.city = n_city;
@@ -96,7 +104,7 @@ exports.postListingEdit = (req, res, next) => {
         listOld.lot_size = n_lot_size;
         listOld.list_date = n_list_date;
         listOld.is_published = n_is_published;
-        listOld.userId = req.session.user.id;
+        // listOld.userId = req.session.user.id;  // this should remain the original
 
         return listOld.save();
       })

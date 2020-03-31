@@ -182,6 +182,121 @@ const validatePassNew = (req, res, next) => {
       passwordToken: passwordToken
     });
 };
+
+const validateRulesListAddEdit = () => {
+  return [
+    body("title", "Title not valid")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Title cannot be empty")
+      .isAlphanumeric()
+      .withMessage("Title should be Alpha-numeric"),
+    body("city")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("City cannot be empty")
+      .isAlpha()
+      .withMessage("City should have only characters"),
+    body("state", "State not valid")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("State cannot be empty")
+      .isAlpha()
+      .withMessage("State should have only characters"),
+    body("zipcode", "Zipcode not valid")
+      .trim()
+      .isAlphanumeric()
+      .withMessage("Zipcode should be Alpha-numeric")
+      .not()
+      .isEmpty()
+      .withMessage("Zipcode cannot be empty"),
+    body("address")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Address cannot be empty"),
+    body("description")
+      // .not()
+      // .isEmpty()
+      // .withMessage("Description cannot be blank")
+      .trim()
+      .isAscii()
+      .withMessage("Special characters not allowed"),
+    body("price", "Price not valid")
+      .not()
+      .isEmpty()
+      .withMessage("Price cannot be empty")
+      .isNumeric()
+      .withMessage("Price should be numeric")
+      .isCurrency(),
+    body("bedrooms")
+      .not()
+      .isEmpty()
+      .withMessage("Bedrooms cannot be empty")
+      .isInt({ min: 0, max: 10 })
+      .withMessage("Bedrooms to be 0 - 10"),
+    body("bathrooms")
+      .not()
+      .isEmpty()
+      .withMessage("Bathrooms cannot be empty")
+      .isInt({ min: 0, max: 10 })
+      .withMessage("Bathrooms to be 0 - 10"),
+    body("garage")
+      .not()
+      .isEmpty()
+      .withMessage("Garage cannot be empty")
+      .isInt({ min: 0, max: 5 })
+      .withMessage("Garage to be 0 - 5"),
+    body("sqft", "SqFt should be number")
+      .not()
+      .isEmpty()
+      .isNumeric(),
+    body("lotsize", "Lotsize should be decimal value")
+      .not()
+      .isEmpty()
+      .isFloat()
+    // body("list_date")  // using system date for list_date, hence no validation
+  ];
+};
+
+const validateListAddEdit = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (errors.isEmpty()) {
+    return next();
+  }
+
+  const userrMessages = errors.array();
+
+  const listing = {
+    id: req.body.id,
+    title: req.body.title,
+    city: req.body.city,
+    state: req.body.state,
+    zipcode: req.body.zipcode,
+    address: req.body.address,
+    description: req.body.description,
+    price: req.body.price,
+    bedrooms: req.body.bedrooms,
+    bathrooms: req.body.bathrooms,
+    garage: req.body.garage,
+    sqft: req.body.sqft,
+    lot_size: req.body.lotsize,
+    ispublished: req.body.ispublished,
+    // list_date: req.body.list_date // using sys date in EJS, not passing value
+  }
+  return res
+    .status(422)
+    .render(path.join(__dirname, "..", "views", "listing_edit"), {
+      userrMessages: userrMessages,
+      listing: listing,
+      alertType: 'danger'
+    });
+};
+
 module.exports = {
   validateRulesRegister,
   validateRegister,
@@ -190,5 +305,7 @@ module.exports = {
   validateRulesPassReset,
   validatePassReset,
   validateRulesPassNew,
-  validatePassNew
+  validatePassNew,
+  validateRulesListAddEdit,
+  validateListAddEdit
 };
