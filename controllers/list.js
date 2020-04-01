@@ -49,39 +49,26 @@ exports.getListingEdit = (req, res, next) => {
 
 
 exports.postListingEdit = (req, res, next) => {
-  const n_title = req.body.title;
-  const n_city = req.body.city;
-  const n_state = req.body.state;
-  const n_zipcode = req.body.zipcode;
-  const n_address = req.body.address;
-  const n_description = req.body.description;
-  const n_price = req.body.price;
-  const n_bedrooms = req.body.bedrooms;
-  const n_bathrooms = req.body.bathrooms;
-  const n_garage = req.body.garage;
-  const n_sqft = req.body.sqft;
-  const n_lot_size = req.body.lotsize;
-  const n_list_date = new Date().toISOString(); // list_date will be current date
-  const n_is_published = req.body.ispublished || 0;
+  const listing = {
+    title: req.body.title,
+    city: req.body.city,
+    state: req.body.state,
+    zipcode: req.body.zipcode,
+    address: req.body.address,
+    description: req.body.description,
+    price: req.body.price,
+    bedrooms: req.body.bedrooms,
+    bathrooms: req.body.bathrooms,
+    garage: req.body.garage,
+    sqft: req.body.sqft,
+    lot_size: req.body.lotsize,
+    is_published: req.body.ispublished || 0,
+    list_date: new Date().toISOString(), // using sys date in EJS, not passing value
+    userId: req.session.user.id
+  }
 
   if (!req.body.id) {
-    const listNew = new Listing({
-      title: n_title,
-      city: n_city,
-      state: n_state,
-      zipcode: n_zipcode,
-      address: n_address,
-      description: n_description,
-      price: n_price,
-      bedrooms: n_bedrooms,
-      bathrooms: n_bathrooms,
-      garage: n_garage,
-      sqft: n_sqft,
-      lot_size: n_lot_size,
-      list_date: n_list_date,
-      is_published: n_is_published,
-      userId: req.session.user.id
-    });
+    const listNew = new Listing(listing);
     return listNew.save()
       .then(result => {
         return res.redirect('/list/seller_manage')
@@ -90,20 +77,20 @@ exports.postListingEdit = (req, res, next) => {
     // Listing.findByPk(req.body.id)
     Listing.findOne({ where: { id: req.body.id, userId: req.session.user.id} })
       .then(listOld => {
-        listOld.title = n_title;
-        listOld.city = n_city;
-        listOld.state = n_state;
-        listOld.zipcode = n_zipcode;
-        listOld.address = n_address;
-        listOld.description = n_description;
-        listOld.price = n_price;
-        listOld.bedrooms = n_bedrooms;
-        listOld.bathrooms = n_bathrooms;
-        listOld.garage = n_garage;
-        listOld.sqft = n_sqft;
-        listOld.lot_size = n_lot_size;
-        listOld.list_date = n_list_date;
-        listOld.is_published = n_is_published;
+        listOld.title = listing.title;
+        listOld.city = listing.city;
+        listOld.state = listing.state;
+        listOld.zipcode = listing.zipcode;
+        listOld.address = listing.address;
+        listOld.description = listing.description;
+        listOld.price = listing.price;
+        listOld.bedrooms = listing.bedrooms;
+        listOld.bathrooms = listing.bathrooms;
+        listOld.garage = listing.garage;
+        listOld.sqft = listing.sqft;
+        listOld.lot_size = listing.lot_size;
+        listOld.list_date = listing.list_date;
+        listOld.is_published = listing.is_published;
         // listOld.userId = req.session.user.id;  // this should remain the original
 
         return listOld.save();
