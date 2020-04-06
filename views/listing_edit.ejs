@@ -18,7 +18,7 @@
               <% if (userrMessages && userrMessages.length > 0) { %>
                 <%- include('includes/_alerts.ejs', {userrMessages: userrMessages, alertType: alertType}) %>
               <% } %>
-              <form action="/list/listing_edit" , method="POST">
+              <form action="/list/listing_edit", enctype="multipart/form-data", method="POST">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <!-- Row 1 -->
                 <div class="form-group row">
@@ -95,19 +95,22 @@
                 </div>
                 <!-- Row 5 -->
                 <div class="form-group row">
-                  <div class="col-6">
+                  <div class="col-4">
+                    <label for="photo_main">Main Image</label>
+                    <input type="file" name="photo_main" id="photo_main" accept="image/*" <%= userrMessages.find(e => e.param === 'photo_main')? "class='invalid'" : "" %>>
+                  </div>
+                  <div class="col-4">
                     <label for="ispublished">Publish?</label>
                     <input type="checkbox" name="ispublished" id="ispublished"
                       <%= listing ? (listing.is_published === true ? "checked": ""):"" %> value=1>
                   </div>
-                  <div class="col-6">
+                  <div class="col-4">
                     <label for="list_date">Created/Updated Date</label>
                     <input type="date" name="list_date" id="list_date" class="form-control" disabled
                       value="<%= new Date().toISOString().substring(0, 10) %>">
                   </div>
                 </div>
                 <input type="hidden" name="id" value="<%= listing ? listing.id:"" %>">
-                <!--  TODO Add Main photo  -->
                 <!--  TODO Add multiple sub-photos -->
                 <input type="submit" value="Upload" class="btn btn-secondary btn-block">
               </form>

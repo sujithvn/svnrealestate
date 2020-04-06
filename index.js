@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const csrf = require('csurf');
 const bodyParser = require('body-parser');
+const multer = require('multer');
 const flash = require('connect-flash');
 const path = require('path');
 require('dotenv').config();
@@ -22,11 +23,28 @@ const app = express();
 const csrfProtection = new csrf();
 const myStore = new SequelizeStore({ db: sequelize });
 const SECRET = process.env.SES_SECRET;
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/imgUploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+  }
+});
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
 
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use('/imgUploads', express.static(path.join(__dirname, 'imgUploads')));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('photo_main'));
 app.use(
   session({
     secret: SECRET, // used for signing the hash
@@ -55,6 +73,9 @@ app.use('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
+  console.log('******************** Server Error 500 ********************');
+  console.log(error);  
+  console.log('******************** Server Error 500 ********************');
   res.redirect('/500');
 });
 

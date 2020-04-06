@@ -62,12 +62,30 @@ exports.postListingEdit = (req, res, next) => {
     garage: req.body.garage,
     sqft: req.body.sqft,
     lot_size: req.body.lotsize,
+    photo_main: '',
     is_published: req.body.ispublished || 0,
     list_date: new Date().toISOString(), // using sys date in EJS, not passing value
     userId: req.session.user.id
   }
 
   if (!req.body.id) {
+    if (!req.file) {
+      inMsg = ["danger", "Please select Main image file of type PNG/JPG/JPEG"];
+      const [msgs, alertType] = processMessage(inMsg);
+      // msgs.param = "imagemain";
+      listing.id = req.body.id;
+
+      return res
+        .status(422)
+        .render(path.join(__dirname, "..", "views", "listing_edit"), {
+          userrMessages: msgs,
+          listing: listing,
+          alertType: alertType
+        });
+    } else {
+      listing.photo_main = req.file.filename;
+    }
+
     const listNew = new Listing(listing);
     return listNew.save()
       .then(result => {
@@ -89,6 +107,7 @@ exports.postListingEdit = (req, res, next) => {
         listOld.garage = listing.garage;
         listOld.sqft = listing.sqft;
         listOld.lot_size = listing.lot_size;
+        if (req.file) { listOld.photo_main = req.file.filename }
         listOld.list_date = listing.list_date;
         listOld.is_published = listing.is_published;
         // listOld.userId = req.session.user.id;  // this should remain the original

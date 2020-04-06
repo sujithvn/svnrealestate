@@ -17,6 +17,10 @@ node_modules/
 # rollup.js default build output
 dist/
 
+# user image uploads
+public/imgUploads
+public/profiles
+
 # JEST files
 coverage/
 
