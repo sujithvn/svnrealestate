@@ -10,7 +10,7 @@
       <div class="card-body">
         <div class="listing-heading text-center">
           <h4 class="text-primary"><%= listing.title %></h4>
-          <h6 class="text-primary"><%= listing.address %></h6>
+          <!-- <h6 class="text-primary"><%= //listing.address %></h6> -->
           <p>
             <i class="fas fa-map-marker text-secondary"></i> <%= listing.city %>, <%= listing.state %> <%= listing.zipcode %></p>
         </div>
@@ -34,7 +34,7 @@
         <!-- </div>
         <div class="row text-secondary pb-2"> -->
           <div class="col-6">
-            <i class="fas fa-clock"></i> <%= listing.list_date %></div>
+            <i class="fas fa-clock"></i> <%= moment(listing.list_date).format(shortDateFormat); %></div>
         </div>
         <hr>
         <a href="/list/listing_detail?lid=<%= listing.id %>" class="btn btn-primary btn-block">More Info</a>

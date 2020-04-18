@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const flash = require('connect-flash');
 const path = require('path');
+const moment = require('moment');
 require('dotenv').config();
 
 
@@ -61,6 +62,12 @@ app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
 });
+
+var shortDayTimeFormat = "ddd @ h:mmA"; // standard day-time format across the app
+var shortDateFormat = "MMM Do YYYY"; // standard date format across the app
+app.locals.moment = moment; // makes moment available as a variable in every EJS page
+app.locals.shortDayTimeFormat = shortDayTimeFormat;
+app.locals.shortDateFormat = shortDateFormat;
 
 // Routes
 app.use('/auth', authRoutes);
