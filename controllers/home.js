@@ -2,7 +2,7 @@ const { Listing } = require('../models/model');
 
 
 exports.home = (req, res, next) => {
-    Listing.findAll({where: {is_published: 1}})
+    Listing.findAll({limit: 3, where: {is_published: 1}, order: [['list_date', 'DESC']]})
     .then(listings => {
         res.render('index', {listings: listings});
     })

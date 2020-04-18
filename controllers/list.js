@@ -3,15 +3,29 @@ const path = require("path");
 
 const { Listing } = require('../models/model');
 const { processMessage } = require('../util/misce');
+const ITEM_PER_PAGE = 3;
 
 exports.getListingAll = (req, res, next) => {
-  Listing.findAll({where: {is_published: 1}})
+  let curP = parseInt(req.query.page) || 1;
+  const query = { where: {is_published: 1} }
+  const limit = ITEM_PER_PAGE;
+  
+  Listing.findAndCountAll({ query })
+  .then(result => {
+    totCount = result.count;
+    totPages = Math.ceil(totCount / ITEM_PER_PAGE);
+    if (curP < 1) { curP = 1; }
+    if (curP > totPages) { curP = totPages; }
+    offset = (curP - 1) * ITEM_PER_PAGE;
+
+    Listing.findAll({ offset, limit, query })
     .then(listings => {
       res.render(path.join(__dirname, "..", "views", "listing_all"), {
-        listings: listings
+        listings, curP, totPages
       });
     })
-    .catch(err => next(new Error(err)));
+  })
+  .catch(err => next(new Error(err)));
 };
 
 exports.getListingDetail = (req, res, next) => {
