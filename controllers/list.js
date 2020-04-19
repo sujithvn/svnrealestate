@@ -1,7 +1,7 @@
 const path = require("path");
 
 
-const { Listing } = require('../models/model');
+const { Listing, User } = require('../models/model');
 const { processMessage } = require('../util/misce');
 const ITEM_PER_PAGE = 3;
 
@@ -18,7 +18,7 @@ exports.getListingAll = (req, res, next) => {
     if (curP > totPages) { curP = totPages; }
     offset = (curP - 1) * ITEM_PER_PAGE;
 
-    Listing.findAll({ offset, limit, query })
+    Listing.findAll({ offset, limit, query, include: User })
     .then(listings => {
       res.render(path.join(__dirname, "..", "views", "listing_all"), {
         listings, curP, totPages
@@ -30,7 +30,7 @@ exports.getListingAll = (req, res, next) => {
 
 exports.getListingDetail = (req, res, next) => {
   const currId = req.query.lid || 0;
-  Listing.findAll({where: {id: currId}})
+  Listing.findAll({where: {id: currId}, include: User})
   .then(listing => {
     res.render(path.join(__dirname, "..", "views", "listing_detail"), {listing: listing[0]});
   })
