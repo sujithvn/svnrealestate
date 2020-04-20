@@ -77,7 +77,9 @@ const Inquiry = sequelize.define("inquiry", {
     primaryKey: true
   },
   message: Sequelize.STRING,
-  contact_date: Sequelize.DATE
+  contact_date: Sequelize.DATE,
+  blocked: Sequelize.BOOLEAN,
+  blockID: Sequelize.STRING
 });
 
 User.hasMany(Inquiry);

@@ -1,9 +1,41 @@
 const path = require("path");
+require("dotenv").config();
 
-
-const { Listing, User } = require('../models/model');
+const { Listing, User, Inquiry } = require('../models/model');
 const { processMessage } = require('../util/misce');
 const ITEM_PER_PAGE = 3;
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+const stripe = require("stripe")(STRIPE_SECRET_KEY);
+
+exports.postStripeBook = (req, res, next) => {
+  const token = req.body.stripeToken;
+  const id = req.query.id;
+  const charge = stripe.charges.create({
+    amount: 9999,
+    currency: "inr",
+    description: "Booking amount for listing",
+    source: token,
+    metadata: {order_desc: "Charge for booking token amt"}
+  })
+  .then(charge => {
+    console.log(charge);
+    Inquiry.findOne({where: {listingId: id}})
+    .then(res => {
+      if (res){
+        return res.update({blockID: charge.id, blocked: true})
+      }
+      const inquiry = new Inquiry({
+        blockID: charge.id,
+        blocked: true,
+        userId: req.session.user.id,
+        listingId: id
+      });
+      return inquiry.save();
+    })
+    return res.redirect(`/list/listing_detail?lid=${id}`);
+  })
+  .catch(err => next(new Error(err)));
+};
 
 exports.getListingAll = (req, res, next) => {
   let curP = parseInt(req.query.page) || 1;

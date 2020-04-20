@@ -15,6 +15,8 @@ const authRoutes = require('./routes/auth');
 const listRoutes = require('./routes/list');
 const sequelize = require('./util/database');
 const errorController = require("./controllers/errors");
+const listController = require("./controllers/list");
+const is_auth = require("./middlewares/is_auth");
 
 
 // initalize sequelize with session store
@@ -54,12 +56,10 @@ app.use(
     saveUninitialized: false // not saved in every req, but only if something changes
   })
 );
-app.use(csrfProtection);
 app.use(flash());
 
 app.use((req, res, next) => { 
   res.locals.isAuth = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
   next();
 });
 
@@ -70,6 +70,14 @@ app.locals.shortDayTimeFormat = shortDayTimeFormat;
 app.locals.shortDateFormat = shortDateFormat;
 
 // Routes
+// Stripe submit is exempted using CSRF, hence moved CSRF below
+app.post("/list/book", is_auth, listController.postStripeBook);
+// app.post("/list/book", listController.postStripeBook);
+app.use(csrfProtection);
+app.use((req, res, next) => { 
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 app.use('/auth', authRoutes);
 app.use('/page', pageRoutes);
 app.use('/list', listRoutes);
@@ -80,9 +88,9 @@ app.use('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  console.log('******************** Server Error 500 ********************');
+  console.log('******************** vvv Server Error 500 vvv ********************');
   console.log(error);  
-  console.log('******************** Server Error 500 ********************');
+  console.log('******************** ^^^ Server Error 500 ^^^ ********************');
   res.redirect('/500');
 });
 
