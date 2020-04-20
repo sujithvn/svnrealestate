@@ -133,22 +133,30 @@
               <h6 class="text-secondary"><%= listing.user.firstName + " " +listing.user.lastName %></h6>
             </div>
           </div>
-          <button class="btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal">Make An Inquiry</button>
-          <br>
-          <p>Block this listing with a token amount of $99.99</p>
-          <form action="/list/book?id=<%= listing.id %> " method="POST">
-            <script
-              src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-              data-key="pk_test_2cd46sVJtBfRbGXOsU3hYd2900ihLKFZTd"
-              data-amount="9999"
-              data-name="Book the listing"
-              data-description="Booking amount"
-              data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-              data-locale="auto"
-              data-currency="inr"
-            >
-            </script>
-          </form>
+          <% if (inqDtls.inq) { %> 
+            <button class="btn-disabled btn-block btn-lg" disabled>Already Inquired</button>
+          <% } else { %> 
+            <button class="btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal">Make An Inquiry</button>
+          <% } %> 
+              <br>
+          <% if (inqDtls.book) { %> 
+            <p>You have already blocked this listing with a payment of $99.99</p>
+          <% } else { %> 
+            <p>Block this listing with a token amount of $99.99</p>
+            <form action="/list/book?id=<%= listing.id %> " method="POST">
+              <script
+                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="pk_test_2cd46sVJtBfRbGXOsU3hYd2900ihLKFZTd"
+                data-amount="9999"
+                data-name="Book the listing"
+                data-description="Booking amount"
+                data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                data-locale="auto"
+                data-currency="inr"
+              >
+              </script>
+            </form>
+          <% } %> 
         </div>
       </div>
     </div>
@@ -165,7 +173,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <form>
+          <form action="/list/inquire?id=<%= listing.id %> " method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="form-group">
               <label for="property_name" class="col-form-label">Property:</label>
               <input type="text" name="listing" class="form-control" value="<%= listing.title %>" disabled>

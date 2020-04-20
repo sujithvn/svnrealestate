@@ -10,6 +10,7 @@ const stripe = require("stripe")(STRIPE_SECRET_KEY);
 exports.postStripeBook = (req, res, next) => {
   const token = req.body.stripeToken;
   const id = req.query.id;
+  let newChargeId = '';  
   const charge = stripe.charges.create({
     amount: 9999,
     currency: "inr",
@@ -18,20 +19,48 @@ exports.postStripeBook = (req, res, next) => {
     metadata: {order_desc: "Charge for booking token amt"}
   })
   .then(charge => {
-    console.log(charge);
-    Inquiry.findOne({where: {listingId: id}})
-    .then(res => {
-      if (res){
-        return res.update({blockID: charge.id, blocked: true})
+    newChargeId = charge.id;
+    return Inquiry.findOne({where: {listingId: id, userId: req.session.user.id}})
+  })
+  .then(result => {
+      if (result){
+        return result.update({blockID: newChargeId, blocked: true})
       }
+      else {
+        const inquiry = new Inquiry({
+          blockID: newChargeId,
+          blocked: true,
+          userId: req.session.user.id,
+          listingId: id
+        });
+        return inquiry.save();
+      }
+    })
+  .then(dbResult => {
+    return res.redirect(`/list/listing_detail?lid=${id}`);
+    })
+  .catch(err => next(new Error(err)));
+};
+
+exports.postInquire = (req, res, next) => {
+  const id = req.query.id;
+  const msg = req.body.message || "No message from user";
+
+  Inquiry.findOne({where: {listingId: id, userId: req.session.user.id}})
+  .then(result => {
+    if (result){
+      return result.update({ message: msg, contact_date: new Date().toISOString() })
+    } else {
       const inquiry = new Inquiry({
-        blockID: charge.id,
-        blocked: true,
+        message: msg,
+        contact_date: new Date().toISOString(),
         userId: req.session.user.id,
         listingId: id
       });
       return inquiry.save();
-    })
+    }
+  })
+  .then(dbResult => {
     return res.redirect(`/list/listing_detail?lid=${id}`);
   })
   .catch(err => next(new Error(err)));
@@ -62,9 +91,23 @@ exports.getListingAll = (req, res, next) => {
 
 exports.getListingDetail = (req, res, next) => {
   const currId = req.query.lid || 0;
+  const inqDtls = {};
+  Inquiry.findOne({where: {listingId: currId, userId: req.session.user.id}})
+  .then(result => {
+    if(result) {
+      inqDtls.inq = result.contact_date ? true : false;
+      inqDtls.book = result.blocked;
+    }
+    else { 
+      inqDtls.inq = false;
+      inqDtls.book = false;
+    }
+  })
+  .catch(err => next(new Error(err)));
+
   Listing.findAll({where: {id: currId}, include: User})
   .then(listing => {
-    res.render(path.join(__dirname, "..", "views", "listing_detail"), {listing: listing[0]});
+    res.render(path.join(__dirname, "..", "views", "listing_detail"), {listing: listing[0], inqDtls});
   })
   .catch(err => next(new Error(err)));
 };
