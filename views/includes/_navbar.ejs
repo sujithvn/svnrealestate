@@ -18,9 +18,14 @@
                 <li class="nav-item mr-3">
                     <a class="nav-link" href="/list/listing_all">Featured Listings</a>
                 </li>
-                <% if (isAuth) { %> 
+                <% if (isAuth && userType === 2) { %> 
                     <li class="nav-item mr-3">
                         <a class="nav-link" href="/list/seller_manage">Manage Listing</a>
+                    </li>
+                <% } %> 
+                <% if (isAuth && userType === 1) { %> 
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" href="/list/buyer_manage">View Inquiries</a>
                     </li>
                 <% } %> 
             </ul>

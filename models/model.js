@@ -84,6 +84,8 @@ const Inquiry = sequelize.define("inquiry", {
 
 User.hasMany(Inquiry);
 Listing.hasMany(Inquiry);
+Inquiry.belongsTo(Listing);
+Inquiry.belongsTo(User);
 
 exports.User = User;
 exports.Listing = Listing;

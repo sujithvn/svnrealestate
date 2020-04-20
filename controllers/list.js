@@ -120,6 +120,14 @@ exports.getSellerManage = (req, res, next) => {
     .catch(err => next(new Error(err)));
 };
 
+exports.getBuyerManage = (req, res, next) => {
+  Inquiry.findAll({ where: { userId: req.session.user.id }, include: Listing })
+    .then(inquiries => {
+      res.render(path.join(__dirname, "..", "views", "listing_buyer_manage"), { inquiries: inquiries });
+    })
+    .catch(err => next(new Error(err)));
+};
+
 exports.getListingEdit = (req, res, next) => {
   const inMsg = req.flash("msg");
   const [msgs, alertType] = processMessage(inMsg);

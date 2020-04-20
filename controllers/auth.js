@@ -39,6 +39,7 @@ exports.postLogin = (req, res, next) => {
         // update vars to denote user-is-authenticated
         req.session.isLoggedIn = true;
         req.session.user = userDB;
+        req.session.userType = userDB.userType;
         return req.session.save(err => {
           console.log(err);
           res.redirect("/");
