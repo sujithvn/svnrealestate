@@ -6,6 +6,7 @@ const multer = require('multer');
 const flash = require('connect-flash');
 const path = require('path');
 const moment = require('moment');
+const helmet = require('helmet');
 require('dotenv').config();
 
 
@@ -57,7 +58,7 @@ app.use(
   })
 );
 app.use(flash());
-
+app.use(helmet());
 app.use((req, res, next) => { 
   res.locals.isAuth = req.session.isLoggedIn;
   res.locals.userType = req.session.userType;
