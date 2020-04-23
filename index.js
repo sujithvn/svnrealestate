@@ -8,6 +8,8 @@ const path = require('path');
 const moment = require('moment');
 const helmet = require('helmet');
 const compression = require('compression');
+const rfs = require('rotating-file-stream');
+const morgan = require('morgan');
 require('dotenv').config();
 
 
@@ -61,6 +63,14 @@ app.use(
 app.use(flash());
 app.use(helmet());
 app.use(compression());
+
+// create a rotating write stream
+const accessLogStream = rfs.createStream('access.log', {
+  interval: '1d', // rotate daily
+  path: path.join(__dirname, 'logs')
+});
+app.use(morgan('combined', { stream: accessLogStream }))
+
 app.use((req, res, next) => { 
   res.locals.isAuth = req.session.isLoggedIn;
   res.locals.userType = req.session.userType;
