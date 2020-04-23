@@ -8,7 +8,7 @@ const USER = process.env.USER;
 const PASS = process.env.PASS;
 
 const sequelize = new Sequelize(DATABASE, USER, PASS, {
-  dialect: "mysql",
+  dialect: "postgres",
   host: HOST,
   port: PORT
 });

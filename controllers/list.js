@@ -68,18 +68,19 @@ exports.postInquire = (req, res, next) => {
 
 exports.getListingAll = (req, res, next) => {
   let curP = parseInt(req.query.page) || 1;
-  const query = { where: {is_published: 1} }
+  const query = { where: {is_published: true} }
   const limit = ITEM_PER_PAGE;
   
-  Listing.findAndCountAll({ query })
+  Listing.findAndCountAll(query)
   .then(result => {
     totCount = result.count;
     totPages = Math.ceil(totCount / ITEM_PER_PAGE);
     if (curP < 1) { curP = 1; }
     if (curP > totPages) { curP = totPages; }
     offset = (curP - 1) * ITEM_PER_PAGE;
+    if (offset < 0) { offset = 0; }
 
-    Listing.findAll({ offset, limit, query, include: User })
+    Listing.findAll({ offset, limit, ...query, include: User })
     .then(listings => {
       res.render(path.join(__dirname, "..", "views", "listing_all"), {
         listings, curP, totPages
@@ -160,7 +161,7 @@ exports.postListingEdit = (req, res, next) => {
     sqft: req.body.sqft,
     lot_size: req.body.lotsize,
     photo_main: '',
-    is_published: req.body.ispublished || 0,
+    is_published: req.body.ispublished || false,
     list_date: new Date().toISOString(), // using sys date in EJS, not passing value
     userId: req.session.user.id
   }

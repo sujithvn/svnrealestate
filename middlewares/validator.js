@@ -285,7 +285,7 @@ const validateListAddEdit = (req, res, next) => {
     garage: req.body.garage,
     sqft: req.body.sqft,
     lot_size: req.body.lotsize,
-    is_published: req.body.ispublished || 0,
+    is_published: req.body.ispublished || false,
     // list_date: req.body.list_date // using sys date in EJS, not passing value
   }
   return res
